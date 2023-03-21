@@ -1,0 +1,1 @@
+*/3 * * * * /opt/homebrew/bin/python3 /Users/soom/Code/final_c1/AI-etl-pipeline/pipeline.py
