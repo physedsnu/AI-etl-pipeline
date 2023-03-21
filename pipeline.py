@@ -55,24 +55,23 @@ for datum in decrypted:
 
     compressed_data.append(datum)
   
-
+# 3. Load : s3에 적재
 load_dotenv() 
 s3_client = boto3.client('s3',
                         aws_access_key_id=os.environ['ACCESS_KEY_ID'],
                         aws_secret_access_key=os.environ['ACCESS_SECRET_KEY']) #S3 연결
 
 
-# 2.Transform-(2) 데이터 압축 진행
+# 2.Transform-(2) : 로그 데이터를 gzip 압축하여 S3에 저장
 def put_log_to_s3(log_data): 
-    # 로그 데이터를 gzip 압축하여 S3에 저장
-    key = f"data/{time.strftime('%Y/%m/%d/%H/%M')}/{time.strftime('%Y%m%d%H%M')}.json.gz" #업로드 파일명
-    compressed_bytes = gzip.compress(json.dumps(log_data).encode('utf-8'))
+    key = f"data/{time.strftime('%Y/%m/%d/%H')}/{time.strftime('%Y%m%d%H%M')}.json.gz" #업로드 경로 및 파일명
+    compressed_bytes = gzip.compress(json.dumps(log_data).encode('utf-8')) #압축
     
-    s3_client.put_object(
+    s3_client.put_object( 
         Bucket='de.project.c1',
         Key=key,
-        Body=compressed_bytes,
-    )
+        Body=compressed_bytes, 
+    ) #s3 업로드
 
 put_log_to_s3(compressed_data)
 print("업로드 완료")
